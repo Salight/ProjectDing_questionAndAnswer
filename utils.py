@@ -70,6 +70,7 @@ def convert_example(examples: dict, tokenizer, max_source_seq_len: int, max_targ
                 truncation=True,
                 max_length=max_target_seq_len
             )
+            print("1111",tokenizer.convert_ids_to_tokens(output_ids))
             decoder_input_ids = output_ids[:-2]                                         # bert-tokenizer 会加一个[CLS]，这个就当成<eos>了，因为是 right-shift
                                                                                         # 所以要-1，又因为 bert-tokenizer会加一个[SEP]，所以要-2
             decoder_input_ids = decoder_input_ids + [tokenizer.pad_token_id] * (max_target_seq_len - len(decoder_input_ids))
@@ -101,7 +102,7 @@ if __name__ == '__main__':
     from rich import print
     from transformers import BertTokenizer
 
-    tokenizer = BertTokenizer.from_pretrained("uer/t5-small-chinese-cluecorpussmall")
+    tokenizer = BertTokenizer.from_pretrained("uer/t5-base-chinese-cluecorpussmall")
     tokenizer.eos_token = tokenizer.sep_token
     tokenizer.bos_token = tokenizer.cls_token
 

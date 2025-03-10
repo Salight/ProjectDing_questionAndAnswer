@@ -38,13 +38,15 @@ def get_dataLoader(dataset, model, tokenizer, max_input_length, max_target_lengt
             return_tensors="pt"
         )
         with tokenizer.as_target_tokenizer():
-            labels = tokenizer(
+            tokenized = tokenizer(
                 batch_answers, 
                 padding=True, 
                 max_length=max_target_length,
                 truncation=True, 
                 return_tensors="pt"
             )["input_ids"]
+            labels = tokenized[:,1:]
+            # batch_data['decoder_input_ids'] = tokenized[:,:-1]
             batch_data['decoder_input_ids'] = model.prepare_decoder_input_ids_from_labels(labels)
             end_token_index = torch.where(labels == tokenizer.sep_token_id)[1]
             for idx, end_idx in enumerate(end_token_index):
